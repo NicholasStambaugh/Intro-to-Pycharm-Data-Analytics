@@ -1,0 +1,78 @@
+#import modules
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
+#default theme
+sns.set_theme()
+
+#graphs
+#sample graph
+tips = sns.load_dataset("tips")
+sns.relplot(
+    data=tips,
+    x="total_bill", y="tip", col="time",
+    hue="smoker", style="smoker", size="size",)
+
+dots = sns.load_dataset("dots")
+sns.relplot(
+    data=dots, kind="line",
+    x="time", y="firing_rate", col="align",
+    hue="choice", size="coherence", style="choice",
+    facet_kws=dict(sharex=False),)
+
+#Statistical estimation
+fmri = sns.load_dataset("fmri")
+sns.relplot(
+    data=fmri, kind="line",
+    x="timepoint", y="signal", col="region",
+    hue="event", style="event",)
+
+#linear regression
+sns.lmplot(data=tips, x="total_bill", y="tip", col="time", hue="smoker")
+
+#distributional plots
+sns.displot(data=tips, x="total_bill", col="time", kde=True)
+sns.displot(data=tips, kind="ecdf", x="total_bill", col="time", hue="smoker", rug=True)
+
+#categorical plots
+sns.catplot(data=tips, kind="swarm", x="day", y="total_bill", hue="smoker")
+sns.catplot(data=tips, kind="violin", x="day", y="total_bill", hue="smoker", split=True)
+sns.catplot(data=tips, kind="bar", x="day", y="total_bill", hue="smoker")
+
+#multivariate view on complex dataset
+penguins = sns.load_dataset("penguins")
+sns.jointplot(data=penguins, x="flipper_length_mm", y="bill_length_mm", hue="species")
+
+#broader view
+sns.pairplot(data=penguins, hue="species")
+
+#lower level tools for building visualizations
+g1 = sns.PairGrid(penguins, hue="species", corner=True)
+g1.map_lower(sns.kdeplot, hue=None, levels=5, color=".2")
+g1.map_lower(sns.scatterplot, marker="+")
+g1.map_diag(sns.histplot, element="step", linewidth=0, kde=True)
+g1.add_legend(frameon=True)
+g1.legend.set_bbox_to_anchor((.61, .6))
+
+#flexible customization
+sns.relplot(
+    data=penguins,
+    x="bill_length_mm", y="bill_depth_mm", hue="body_mass_g"
+)
+
+sns.set_theme(style="ticks", font_scale=1.25)
+g = sns.relplot(
+    data=penguins,
+    x="bill_length_mm", y="bill_depth_mm", hue="body_mass_g",
+    palette="crest", marker="x", s=100,
+)
+g.set_axis_labels("Bill length (mm)", "Bill depth (mm)", labelpad=10)
+g.legend.set_title("Body mass (g)")
+g.figure.set_size_inches(6.5, 4.5)
+g.ax.margins(.15)
+g.despine(trim=True)
+
+
+#show graphs using matplotlib
+plt.show()
